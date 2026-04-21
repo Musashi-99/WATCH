@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"c:/Users/krris/Documents/interview projects/WATCH/car_produit_RO_26674ST-OO-1320ST-01.avif\" \"c:/Users/krris/Documents/interview projects/WATCH/public/assets/photo/watch-ro-steel.avif\")",
+      "Bash(cp \"c:/Users/krris/Documents/interview projects/WATCH/carouselHP_novelties_1000x1321_ROmini_C-1.avif\" \"c:/Users/krris/Documents/interview projects/WATCH/public/assets/photo/watch-ro-mini.avif\")"
+    ]
+  }
+}

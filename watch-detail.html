@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" class="lenis">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audemars Piguet — Royal Oak</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    /* ============================
+       WATCH DETAIL PAGE STYLES
+       ============================ */
+    .detail-hero {
+      min-height: 100vh;
+      background: var(--bg-color);
+      display: flex;
+      align-items: center;
+      padding: 100px 5% 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .detail-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(196, 149, 106, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .detail-breadcrumb {
+      position: absolute;
+      top: 90px;
+      left: 5%;
+      font-family: var(--font-accent);
+      font-size: 0.65rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.35);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .detail-breadcrumb a {
+      color: rgba(255,255,255,0.35);
+      transition: color 0.3s;
+    }
+
+    .detail-breadcrumb a:hover {
+      color: var(--accent-gold);
+    }
+
+    .detail-breadcrumb span {
+      color: rgba(255,255,255,0.15);
+    }
+
+    .detail-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      width: 100%;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .detail-image-col {
+      position: relative;
+    }
+
+    .detail-image-frame {
+      position: relative;
+      border-radius: 2px;
+      overflow: hidden;
+      background: #faf8f5;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .detail-image-frame--dark {
+      background: #0d0d0d;
+    }
+
+    .detail-watch-img {
+      width: 85%;
+      height: 85%;
+      object-fit: contain;
+      display: block;
+      margin: auto;
+    }
+
+    .detail-image-accent {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(to right, transparent, var(--accent-gold), transparent);
+    }
+
+    .detail-slide-indicator {
+      position: absolute;
+      bottom: -2.5rem;
+      left: 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .detail-slide-dot {
+      width: 20px;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.3s;
+    }
+
+    .detail-slide-dot.active {
+      width: 40px;
+      background: var(--accent-gold);
+    }
+
+    .detail-info-col {
+      position: relative;
+    }
+
+    .detail-eyebrow {
+      font-family: var(--font-accent);
+      font-size: 0.65rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.5em;
+      color: var(--accent-gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .detail-eyebrow::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--accent-gold);
+    }
+
+    .detail-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.5vw, 3.5rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: #e8d5bf;
+      margin-bottom: 0.6rem;
+    }
+
+    .detail-subtitle {
+      font-family: var(--font-accent);
+      font-size: 0.7rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-ref {
+      font-family: var(--font-accent);
+      font-size: 0.62rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 2.5rem;
+    }
+
+    .detail-divider {
+      width: 50px;
+      height: 1px;
+      background: var(--accent-gold);
+      margin-bottom: 2rem;
+    }
+
+    .detail-description {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+
+    .detail-specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-bottom: 3rem;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .detail-spec-item {
+      padding: 1.1rem 1.4rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .detail-spec-item:nth-child(even) {
+      border-right: none;
+    }
+
+    .detail-spec-item:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+
+    .detail-spec-label {
+      font-family: var(--font-accent);
+      font-size: 0.55rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    .detail-spec-value {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .detail-reserve-btn {
+      display: inline-block;
+      font-family: var(--font-accent);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 16px 40px;
+      background: var(--primary-color);
+      color: #0b0b0b;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .detail-reserve-btn:hover {
+      background: #d4a57a;
+      transform: translateY(-1px);
+    }
+
+    .detail-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-accent);
+      font-size: 0.68rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.45);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 16px 28px;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .detail-back-btn:hover {
+      border-color: rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.8);
+    }
+
+    .detail-features {
+      padding: 6rem 5%;
+      background: #080808;
+      position: relative;
+    }
+
+    .detail-features::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent-gold), transparent);
+    }
+
+    .detail-features-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .detail-features-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      font-weight: 400;
+      color: #e8d5bf;
+    }
+
+    .detail-features-title em {
+      color: var(--accent-gold);
+      font-style: italic;
+    }
+
+    .detail-features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .detail-feature-item {
+      background: #111;
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .detail-feature-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 1.2rem;
+      border-radius: 50%;
+      border: 1px solid rgba(196,149,106,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+    }
+
+    .detail-feature-label {
+      font-family: var(--font-accent);
+      font-size: 0.6rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-feature-value {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #e8d5bf;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .detail-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .detail-hero {
+        padding-top: 120px;
+      }
+
+      .detail-features-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .detail-specs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-spec-item {
+        border-right: none;
+      }
+
+      .detail-spec-item:last-child {
+        border-bottom: none;
+      }
+
+      .detail-features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="nav-links">
+        <a href="index.html#collection">Collection</a>
+        <a href="index.html#heritage">Heritage</a>
+        <a href="index.html#craftsmanship">Craftsmanship</a>
+      </div>
+    </div>
+    <div class="nav-center">
+      <div class="nav-logo-container">
+        <a href="index.html">
+          <svg class="nav-logo-svg" viewBox="0 0 200 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <text x="100" y="42" text-anchor="middle" font-family="'Playfair Display', serif" font-size="52" font-weight="700" letter-spacing="2">AP</text>
+            <text x="100" y="62" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8" font-weight="600" letter-spacing="4" text-transform="uppercase">AUDEMARS PIGUET</text>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-cta open-reserve-modal">Reserve Now</button>
+    </div>
+  </nav>
+
+  <!-- ===================== WATCH DETAIL HERO ===================== -->
+  <section class="detail-hero">
+    <div class="detail-breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="index.html#craftsmanship">Collection</a>
+      <span>/</span>
+      <span id="detail-breadcrumb-name">Royal Oak</span>
+    </div>
+
+    <div class="detail-content">
+      <!-- Image Column -->
+      <div class="detail-image-col">
+        <div class="detail-image-frame" id="detail-image-frame">
+          <img class="detail-watch-img" id="detail-watch-img" src="" alt="Royal Oak Watch" />
+          <div class="detail-image-accent"></div>
+        </div>
+        <div class="detail-slide-indicator">
+          <div class="detail-slide-dot active"></div>
+          <div class="detail-slide-dot"></div>
+          <div class="detail-slide-dot"></div>
+        </div>
+      </div>
+
+      <!-- Info Column -->
+      <div class="detail-info-col">
+        <p class="detail-eyebrow" id="detail-eyebrow">Haute Horlogerie · 2024</p>
+        <h1 class="detail-title" id="detail-title">Royal Oak</h1>
+        <p class="detail-subtitle" id="detail-subtitle">Double Balance Wheel Openworked</p>
+        <p class="detail-ref" id="detail-ref">Ref. 15407OR.OO.1220OR.01</p>
+        <div class="detail-divider"></div>
+        <p class="detail-description" id="detail-description">A masterpiece of haute horlogerie.</p>
+
+        <div class="detail-specs-grid" id="detail-specs-grid">
+          <!-- populated by JS -->
+        </div>
+
+        <div class="detail-actions">
+          <button class="detail-reserve-btn open-reserve-modal">Reserve This Watch</button>
+          <a href="index.html#craftsmanship" class="detail-back-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+            Back to Collection
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DETAIL FEATURES ===================== -->
+  <section class="detail-features">
+    <div class="detail-features-header">
+      <h2 class="detail-features-title">Crafted Beyond <em>Expectation</em></h2>
+    </div>
+    <div class="detail-features-grid" id="detail-features-grid">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="footer-top-rule"></div>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <svg class="footer-logo" viewBox="0 0 200 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <text x="100" y="42" text-anchor="middle" font-family="'Playfair Display', serif" font-size="52" font-weight="700" letter-spacing="2">AP</text>
+            <text x="100" y="62" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8" font-weight="600" letter-spacing="4">AUDEMARS PIGUET</text>
+          </svg>
+          <p class="footer-tagline">Le Brassus · Est. 1875</p>
+          <p class="footer-address">Route de France 16, 1348 Le Brassus, Switzerland</p>
+          <div class="footer-socials">
+            <a class="footer-social" href="https://www.instagram.com/audemarspiguet/" target="_blank" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a class="footer-social" href="https://www.facebook.com/audemarspiguet" target="_blank" aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a class="footer-social" href="https://www.youtube.com/@AudemarsPiguet" target="_blank" aria-label="YouTube">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5 class="footer-col-title">Collections</h5>
+          <a href="https://www.audemarspiguet.com/en/watch-collection/royal-oak/" target="_blank">Royal Oak</a>
+          <a href="https://www.audemarspiguet.com/en/watch-collection/royal-oak-offshore/" target="_blank">Royal Oak Offshore</a>
+          <a href="https://www.audemarspiguet.com/en/watch-collection/royal-oak-concept/" target="_blank">Royal Oak Concept</a>
+          <a href="https://www.audemarspiguet.com/en/watch-collection/code-11-59/" target="_blank">CODE 11.59</a>
+        </div>
+        <div class="footer-col">
+          <h5 class="footer-col-title">Maison</h5>
+          <a href="https://www.audemarspiguet.com/en/our-story/" target="_blank">Our Story</a>
+          <a href="https://www.audemarspiguet.com/en/our-story/savoir-faire/" target="_blank">Savoir-Faire</a>
+          <a href="https://www.audemarspiguet.com/en/our-story/museum/" target="_blank">Musée Atelier</a>
+          <a href="https://www.audemarspiguet.com/en/news/" target="_blank">News</a>
+        </div>
+        <div class="footer-col">
+          <h5 class="footer-col-title">Boutiques</h5>
+          <a href="https://www.audemarspiguet.com/en/locate-us/" target="_blank">Le Brassus</a>
+          <a href="https://www.audemarspiguet.com/en/locate-us/" target="_blank">Geneva</a>
+          <a href="https://www.audemarspiguet.com/en/locate-us/" target="_blank">New York</a>
+          <a href="https://www.audemarspiguet.com/en/locate-us/" target="_blank">Hong Kong</a>
+        </div>
+        <div class="footer-col footer-col-reserve">
+          <h5 class="footer-col-title">Royal Oak</h5>
+          <p class="footer-col-desc">Experience the pinnacle of haute horlogerie. Request a private consultation at your nearest AP boutique.</p>
+          <button class="footer-reserve-btn open-reserve-modal">Request Consultation</button>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-legal">&copy; 2026 Audemars Piguet. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="https://www.audemarspiguet.com/en/legal-notice/" target="_blank">Legal</a>
+          <a href="https://www.audemarspiguet.com/en/privacy-policy/" target="_blank">Privacy</a>
+          <a href="https://www.audemarspiguet.com/en/contact-us/" target="_blank">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== RESERVATION MODAL ===================== -->
+  <div class="modal-overlay" id="reserve-modal" aria-hidden="true">
+    <div class="modal">
+      <button class="modal-close" id="modal-close" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-left">
+        <img class="modal-watch-img" id="modal-watch-img" src="/assets/photo/z1.png" alt="Royal Oak" />
+        <div class="modal-left-overlay"></div>
+        <div class="modal-left-text">
+          <p class="modal-left-tag">Haute Horlogerie</p>
+          <h3 class="modal-left-title" id="modal-watch-name">Royal Oak<br>Openworked</h3>
+        </div>
+      </div>
+      <div class="modal-right">
+        <p class="modal-eyebrow">Private Consultation</p>
+        <h2 class="modal-title">Reserve Your <em>Timepiece</em></h2>
+        <p class="modal-subtitle">Experience this Royal Oak in person at an AP boutique near you.</p>
+        <form class="modal-form" id="reserve-form" name="reservation" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="reservation" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first-name">First Name</label>
+              <input type="text" id="first-name" name="first-name" required />
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name</label>
+              <input type="text" id="last-name" name="last-name" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone / WhatsApp</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+          <div class="form-group">
+            <label for="variant">Preferred Model</label>
+            <select id="variant" name="variant">
+              <option value="rose-gold-openworked">Rose Gold — Double Balance Wheel Openworked</option>
+              <option value="steel-36mm">Steel — Selfwinding 36mm</option>
+              <option value="steel-mini">Steel — Selfwinding Mini</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="3"></textarea>
+          </div>
+          <button type="submit" class="form-submit-btn">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./watch-detail.js"></script>
+</body>
+</html>
