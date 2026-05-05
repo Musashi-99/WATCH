@@ -99,6 +99,56 @@ const watches = {
     modalNameLine2: 'Mini',
     selectValue: 'steel-mini',
   },
+  4: {
+    name: 'Royal Oak',
+    subtitle: 'Perpetual Calendar',
+    eyebrow: 'Haute Horlogerie · 18K Rose Gold',
+    ref: 'Ref. 26574OR.OO.1220OR.01',
+    image: '/assets/photo/ap-watch-4.jpeg',
+    imageDark: false,
+    description: 'A horological monument in 18-karat rose gold. The Royal Oak Perpetual Calendar houses Calibre 5134 — a self-winding masterwork displaying day, date, month, moon phase, and leap year cycle through a symphony of apertures on the iconic Grande Tapisserie dial. Perpetual refinement across time.',
+    specs: [
+      { label: 'Case', value: '41mm · 18K Rose Gold' },
+      { label: 'Movement', value: 'Calibre 5134' },
+      { label: 'Power Reserve', value: '55 Hours' },
+      { label: 'Crystal', value: 'Anti-reflective Sapphire' },
+      { label: 'Water Resistance', value: '20 Metres' },
+      { label: 'Complication', value: 'Perpetual Calendar' },
+    ],
+    features: [
+      { label: 'Complications', value: '5', icon: 'dial' },
+      { label: 'Calibre', value: '5134', icon: 'gear' },
+      { label: 'Power Reserve', value: '55h', icon: 'power' },
+    ],
+    modalNameLine1: 'Royal Oak',
+    modalNameLine2: 'Perpetual Calendar',
+    selectValue: 'rose-gold-perpetual',
+  },
+  5: {
+    name: 'Royal Oak',
+    subtitle: 'Selfwinding Chronograph',
+    eyebrow: 'Chronograph · 18K Rose Gold',
+    ref: 'Ref. 26239OR.OO.1220OR.01',
+    image: '/assets/photo/ap-watch-5.jpeg',
+    imageDark: false,
+    description: 'The Royal Oak Chronograph in 18-karat rose gold — measuring elapsed time with the precision of Calibre 2385. Forty hours of power reserve power the flyback function, while the integrated bracelet and trademark octagonal bezel anchor its unmistakable silhouette. Performance elevated to art.',
+    specs: [
+      { label: 'Case', value: '41mm · 18K Rose Gold' },
+      { label: 'Movement', value: 'Calibre 2385' },
+      { label: 'Power Reserve', value: '40 Hours' },
+      { label: 'Crystal', value: 'Anti-reflective Sapphire' },
+      { label: 'Water Resistance', value: '50 Metres' },
+      { label: 'Function', value: 'Flyback Chronograph' },
+    ],
+    features: [
+      { label: 'Pushers', value: '2', icon: 'gear' },
+      { label: 'Calibre', value: '2385', icon: 'balance' },
+      { label: 'Power Reserve', value: '40h', icon: 'power' },
+    ],
+    modalNameLine1: 'Royal Oak',
+    modalNameLine2: 'Chronograph',
+    selectValue: 'rose-gold-chronograph',
+  },
 };
 
 /* ============================
@@ -161,9 +211,21 @@ const populatePage = () => {
   if (imgEl) { imgEl.src = watch.image; imgEl.alt = `${watch.name} ${watch.subtitle}`; }
   if (frameEl && watch.imageDark) frameEl.classList.add('detail-image-frame--dark');
 
-  // Slide indicator dots
-  const dots = document.querySelectorAll('.detail-slide-dot');
-  dots.forEach((d, i) => d.classList.toggle('active', i === watchId - 1));
+  // Slide indicator dots — rebuild for 5 watches (safe DOM)
+  const dotContainer = document.querySelector('.detail-slide-indicator');
+  if (dotContainer) {
+    while (dotContainer.firstChild) dotContainer.removeChild(dotContainer.firstChild);
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'detail-slide-dot' + (i === watchId ? ' active' : '');
+      dot.dataset.watch = String(i);
+      dot.style.cursor = 'pointer';
+      dot.addEventListener('click', () => {
+        window.location.href = `watch-detail.html?watch=${i}`;
+      });
+      dotContainer.appendChild(dot);
+    }
+  }
 
   // Text fields
   const setText = (id, text) => { const n = document.getElementById(id); if (n) n.textContent = text; };
@@ -273,12 +335,14 @@ const initNavScroll = () => {
 };
 
 /* ============================
-   MODAL
+   MODAL + SUCCESS ANIMATION
    ============================ */
 const initModal = () => {
   const modal = document.getElementById('reserve-modal');
   const closeBtn = document.getElementById('modal-close');
   const openBtns = document.querySelectorAll('.open-reserve-modal');
+  const form = document.getElementById('reserve-form');
+  const successEl = document.getElementById('modal-success');
 
   if (!modal) return;
 
@@ -286,6 +350,9 @@ const initModal = () => {
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    // Reset success state
+    if (successEl) successEl.classList.remove('active');
+    if (form) form.style.display = '';
   };
 
   const closeModal = () => {
@@ -298,6 +365,28 @@ const initModal = () => {
   closeBtn?.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // Success animation on form submit
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (form) form.style.display = 'none';
+    if (successEl) {
+      successEl.classList.add('active');
+      // Animate ring draw
+      const ring = successEl.querySelector('.success-ring');
+      const check = successEl.querySelector('.success-check');
+      if (ring && check) {
+        const ringLen = 2 * Math.PI * 36;
+        gsap.set(ring, { strokeDasharray: ringLen, strokeDashoffset: ringLen });
+        gsap.set(check, { strokeDasharray: 50, strokeDashoffset: 50, opacity: 0 });
+        const tl = gsap.timeline();
+        tl.to(ring, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' })
+          .to(check, { strokeDashoffset: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.1');
+      }
+      // Auto-close after 3s
+      setTimeout(closeModal, 3000);
+    }
+  });
 };
 
 /* ============================

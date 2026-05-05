@@ -76,7 +76,7 @@
       position: relative;
       border-radius: 2px;
       overflow: hidden;
-      background: #faf8f5;
+      background: transparent;
       aspect-ratio: 1 / 1;
       display: flex;
       align-items: center;
@@ -84,7 +84,7 @@
     }
 
     .detail-image-frame--dark {
-      background: #0d0d0d;
+      background: transparent;
     }
 
     .detail-watch-img {
@@ -600,6 +600,17 @@
           </div>
           <button type="submit" class="form-submit-btn">Submit Request</button>
         </form>
+        <!-- Success State -->
+        <div class="modal-success" id="modal-success">
+          <div class="success-circle">
+            <svg class="success-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle class="success-ring" cx="40" cy="40" r="36" stroke="#c4956a" stroke-width="1.5"/>
+              <polyline class="success-check" points="24,40 35,51 56,29" stroke="#c4956a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="success-title">Request Sent</h3>
+          <p class="success-body">Thank you. A private consultant will be in touch within 24 hours.</p>
+        </div>
       </div>
     </div>
   </div>

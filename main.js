@@ -318,12 +318,14 @@ const initNavScroll = () => {
 };
 
 /* ============================
-   MODAL + SMOOTH SCROLL ANCHORS
+   MODAL + SMOOTH SCROLL ANCHORS + SUCCESS ANIMATION
    ============================ */
 const initModal = () => {
   const modal = document.getElementById('reserve-modal');
   const closeBtn = document.getElementById('modal-close');
   const openBtns = document.querySelectorAll('.open-reserve-modal');
+  const form = document.getElementById('reserve-form');
+  const successEl = document.getElementById('modal-success');
 
   if (!modal) return;
 
@@ -331,6 +333,8 @@ const initModal = () => {
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    if (successEl) successEl.classList.remove('active');
+    if (form) form.style.display = '';
   };
 
   const closeModal = () => {
@@ -350,6 +354,26 @@ const initModal = () => {
     if (e.key === 'Escape') closeModal();
   });
 
+  // Success animation on submit
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (form) form.style.display = 'none';
+    if (successEl) {
+      successEl.classList.add('active');
+      const ring = successEl.querySelector('.success-ring');
+      const check = successEl.querySelector('.success-check');
+      if (ring && check) {
+        const ringLen = 2 * Math.PI * 36;
+        gsap.set(ring, { strokeDasharray: ringLen, strokeDashoffset: ringLen });
+        gsap.set(check, { strokeDasharray: 50, strokeDashoffset: 50, opacity: 0 });
+        gsap.timeline()
+          .to(ring, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' })
+          .to(check, { strokeDashoffset: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.1');
+      }
+      setTimeout(closeModal, 3000);
+    }
+  });
+
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', (e) => {
@@ -363,13 +387,90 @@ const initModal = () => {
 };
 
 /* ============================
+   PRELOADER
+   ============================ */
+const initPreloader = () => {
+  const preloader = document.getElementById('preloader');
+  if (!preloader) return;
+
+  const fill = preloader.querySelector('.preloader-line-fill');
+  if (fill) {
+    gsap.to(fill, { scaleX: 1, duration: 1.2, ease: 'power2.inOut', transformOrigin: 'left' });
+  }
+
+  gsap.to(preloader, {
+    opacity: 0,
+    duration: 0.6,
+    delay: 1.4,
+    ease: 'power2.inOut',
+    onComplete: () => { preloader.style.display = 'none'; },
+  });
+};
+
+/* ============================
+   SCROLL PROGRESS BAR
+   ============================ */
+const initScrollProgress = () => {
+  const bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+
+  lenis.on('scroll', ({ scroll, limit }) => {
+    const pct = limit > 0 ? (scroll / limit) * 100 : 0;
+    bar.style.transform = `scaleX(${pct / 100})`;
+  });
+};
+
+/* ============================
+   ETHOS SLIDE COUNTER
+   ============================ */
+const initEthosCounter = () => {
+  const nextBtns = document.querySelectorAll('.ethos-next-btn');
+  const counterEl = document.querySelector('.ethos-counter-current');
+  if (!counterEl || !nextBtns.length) return;
+
+  const order = ['bl', 'st', 'mini'];
+  let current = 0;
+
+  nextBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      const idx = order.indexOf(target);
+      if (idx !== -1) {
+        current = idx;
+        counterEl.textContent = String(current + 1).padStart(2, '0');
+      }
+    });
+  });
+};
+
+/* ============================
+   BACK TO TOP
+   ============================ */
+const initBackToTop = () => {
+  const btn = document.getElementById('back-to-top');
+  if (!btn) return;
+
+  lenis.on('scroll', ({ scroll }) => {
+    btn.classList.toggle('visible', scroll > 500);
+  });
+
+  btn.addEventListener('click', () => {
+    lenis.scrollTo(0);
+  });
+};
+
+/* ============================
    INIT ALL
    ============================ */
 document.addEventListener('DOMContentLoaded', () => {
+  initPreloader();
   initHeroAnimations();
   initProductRevealAnimations();
   initEthosAnimations();
+  initEthosCounter();
   initCatalogAnimations();
   initNavScroll();
   initModal();
+  initScrollProgress();
+  initBackToTop();
 });
